@@ -2,6 +2,7 @@ package fp.dual.es.superheroes.controlador;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,38 +37,40 @@ public class ControladorSuperheroes {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<?> selecionarSuperheroesPorId(@PathVariable Integer id) throws SuperheroeException {
+    public ResponseEntity<?> selecionarSuperheroesPorId(@PathVariable Integer id) {
         try {
-
+            return new ResponseEntity<>(this.servicioSuperheroe.seleccionarPorId(id), HttpStatus.OK);
         } catch (SuperheroeException e) {
-            return new ResponseEntity<>(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @PostMapping(path = "/insertar")
-    public ResponseEntity<Integer> insertarSuperheroe(@RequestBody Superheroe superheroe) throws Exception {
-        Integer superheroeInsertado = null;
+    public ResponseEntity<String> insertarSuperheroe(@RequestBody Superheroe superheroe) {
         try {
-            superheroeInsertado = this.servicioSuperheroe.insertarSuperheroe(superheroe);
-        } catch (RuntimeException e) {
-            log.debug(e.getMessage());
-            e.printStackTrace();
+            this.servicioSuperheroe.insertarSuperheroe(superheroe);
+
+            return new ResponseEntity<>("Se ha creado el superhéroe "
+                    + superheroe.getNameSuper() + "correctamente.",
+                    HttpStatus.OK);
+        } catch (SuperheroeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok(superheroeInsertado);
     }
 
     @PutMapping(path = "/actualizar")
-    public ResponseEntity<Integer> actualizarSuperheroe(@RequestBody Superheroe superheroe) throws Exception {
-        Integer numActualizados = null;
+    public ResponseEntity<String> actualizarSuperheroe(@RequestBody Superheroe superheroe) throws Exception {
         try {
-            numActualizados = this.servicioSuperheroe.actualizarSuperheroe(superheroe);
-        } catch (RuntimeException e) {
-            log.debug(e.getMessage());
-            e.printStackTrace();
-        }
+            this.servicioSuperheroe.actualizarSuperheroe(superheroe);
 
-        return ResponseEntity.ok(numActualizados);
+            return new ResponseEntity<>("El superhéroe "
+                    + superheroe.getNameSuper() + " ha sido actualizado correctamente.",
+                    HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(path = "/borrar/{id}")
