@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fp.dual.es.superheroes.persistencia.mapper.SuperheroeMapper">
+  <resultMap id="BaseResultMap" type="fp.dual.es.superheroes.persistencia.modelo.Superheroe">
+    <id column="ID_SUPER" jdbcType="INTEGER" property="idSuper" />
+    <result column="NAME_SUPER" jdbcType="VARCHAR" property="nameSuper" />
+    <result column="ALTER_SUPER" jdbcType="VARCHAR" property="alterSuper" />
+    <result column="IMG_SUPER" jdbcType="VARCHAR" property="imgSuper" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID_SUPER, NAME_SUPER, ALTER_SUPER, IMG_SUPER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from SuperHeroe
+    where ID_SUPER = #{idSuper,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from SuperHeroe
+    where ID_SUPER = #{idSuper,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="fp.dual.es.superheroes.persistencia.modelo.Superheroe">
+    insert into SuperHeroe (ID_SUPER, NAME_SUPER, ALTER_SUPER, 
+      IMG_SUPER)
+    values (#{idSuper,jdbcType=INTEGER}, #{nameSuper,jdbcType=VARCHAR}, #{alterSuper,jdbcType=VARCHAR}, #{imgSuper,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="fp.dual.es.superheroes.persistencia.modelo.Superheroe">
+    insert into SuperHeroe
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idSuper != null">
+        ID_SUPER,
+      </if>
+      <if test="nameSuper != null">
+        NAME_SUPER,
+      </if>
+      <if test="alterSuper != null">
+        ALTER_SUPER,
+      </if>
+      <if test="imgSuper != null">
+        IMG_SUPER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idSuper != null"> #{idSuper,jdbcType=INTEGER},
+      </if>
+      <if test="nameSuper != null"> #{nameSuper,jdbcType=VARCHAR},
+      </if>
+      <if test="alterSuper != null"> #{alterSuper,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSuper != null"> #{imgSuper,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="fp.dual.es.superheroes.persistencia.modelo.Superheroe">
+    update SuperHeroe
+    <set>
+      <if test="nameSuper != null">
+        NAME_SUPER = #{nameSuper,jdbcType=VARCHAR},
+      </if>
+      <if test="alterSuper != null">
+        ALTER_SUPER = #{alterSuper,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSuper != null">
+        IMG_SUPER = #{imgSuper,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID_SUPER = #{idSuper,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="fp.dual.es.superheroes.persistencia.modelo.Superheroe">
+    update SuperHeroe
+    set NAME_SUPER = #{nameSuper,jdbcType=VARCHAR},
+      ALTER_SUPER = #{alterSuper,jdbcType=VARCHAR},
+      IMG_SUPER = #{imgSuper,jdbcType=VARCHAR}
+    where ID_SUPER = #{idSuper,jdbcType=INTEGER}
+  </update>
+  <select id="getSuperheroes" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from superheroe
+  </select>
+</mapper>
